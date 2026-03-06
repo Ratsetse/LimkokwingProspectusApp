@@ -1,68 +1,84 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  StatusBar
+} from "react-native";
+
 import { faculties } from "../data";
 import FacultyCard from "../components/FacultyCard";
-import { TouchableOpacity } from "react-native";
 
 export default function HomeScreen({ navigation }) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.mainTitle}>Limkokwing University</Text>
-      <Text style={styles.subTitle}>
-        Prospectus & Career Guidance App
-      </Text>
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" />
 
-      <FlatList
-        data={faculties}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ paddingBottom: 20 }}
-        renderItem={({ item }) => (
-          <FacultyCard
-            faculty={item}
-            onPress={() =>
-              navigation.navigate("Faculty", { faculty: item })
-            }
-          />
-        )}
-      />
+      <View style={styles.container}>
 
-      <TouchableOpacity
-        style={styles.quizButton}
-        onPress={() => navigation.navigate("Career Quiz")}
-      >
-        <Text style={styles.quizText}>🎯 Take Career Quiz</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Header Section */}
+        <View style={styles.header}>
+          <Text style={styles.mainTitle}>Limkokwing University</Text>
+          <Text style={styles.subTitle}>
+            Prospectus & Career Guidance App
+          </Text>
+        </View>
+
+        {/* Faculty List */}
+        <FlatList
+          data={faculties}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listContainer}
+          renderItem={({ item }) => (
+            <FacultyCard
+              faculty={item}
+              onPress={() =>
+                navigation.navigate("Faculty", { faculty: item })
+              }
+            />
+          )}
+        />
+
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f4f6f9",
+  },
+
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f4f6f9"
+    paddingHorizontal: 20,
   },
-  mainTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 5,
-    color: "#2c3e50"
-  },
-  subTitle: {
-    textAlign: "center",
+
+  header: {
+    marginTop: 10,
     marginBottom: 20,
-    color: "#7f8c8d"
-  },
-  quizButton: {
-    backgroundColor: "#371eee",
-    padding: 15,
-    borderRadius: 12,
     alignItems: "center",
-    marginTop: 10
   },
-  quizText: {
-    color: "#fff",
-    fontWeight: "bold"
-  }
+
+  mainTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#2c3e50",
+  },
+
+  subTitle: {
+    fontSize: 16,
+    color: "#7f8c8d",
+    marginTop: 5,
+  },
+
+  listContainer: {
+    paddingBottom: 30,
+  },
+
 });

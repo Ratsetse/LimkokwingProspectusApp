@@ -1,5 +1,13 @@
 import React, { useRef, useState } from "react";
-import { View, Text, Image, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { Video } from "expo-av";
 import RatingComponent from "../components/RatingComponent";
 
@@ -8,15 +16,13 @@ export default function CourseDetailScreen({ route }) {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  // Get screen width to make video responsive
   const screenWidth = Dimensions.get("window").width;
-  const videoHeight = (screenWidth - 30) * 9 / 16; // maintain 16:9 aspect ratio
 
-  // Play/pause toggle
   const togglePlayPause = async () => {
     if (!videoRef.current) return;
 
     const status = await videoRef.current.getStatusAsync();
+
     if (status.isPlaying) {
       await videoRef.current.pauseAsync();
       setIsPlaying(false);
@@ -28,45 +34,74 @@ export default function CourseDetailScreen({ route }) {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Course Image */}
-      <Image source={{ uri: course.image }} style={styles.image} />
+      {/* Course Image Card */}
+      <View style={styles.mediaCard}>
+        <Image source={course.image} style={styles.image} />
+      </View>
 
-      {/* Course Name and Description */}
+      {/* Course Info */}
       <Text style={styles.title}>{course.name}</Text>
       <Text style={styles.description}>{course.description}</Text>
 
       {/* Video Section */}
       <Text style={styles.sectionTitle}>Course Introduction Video</Text>
+      <View style={styles.mediaCard}>
+        <Video
+          ref={videoRef}
+          source={course.video}
+          style={styles.video}
+          resizeMode="cover"
+          useNativeControls
+          isLooping
+        />
+      </View>
 
-      <Video
-        ref={videoRef}
-        source={{ uri: course.video }}
-        style={[styles.video, { width: screenWidth - 30, height: videoHeight }]}
-        resizeMode="contain"
-        isLooping
-      />
-
-      {/* Play / Pause Buttons */}
+      {/* Play / Pause Button */}
       <View style={styles.controls}>
         <TouchableOpacity onPress={togglePlayPause} style={styles.button}>
-          <Text style={styles.buttonText}>{isPlaying ? "Pause" : "Play"}</Text>
+          <Text style={styles.buttonText}>
+            {isPlaying ? "Pause Video" : "Play Video"}
+          </Text>
         </TouchableOpacity>
       </View>
 
-      {/* Rating Component */}
+      {/* Rating */}
       <RatingComponent />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15 },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#f4f6f9", 
+  },
+
+  mediaCard: {
+    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 10,
+    marginVertical: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+    elevation: 5,
+  },
 
   image: {
     width: "100%",
-    aspectRatio: 16 / 9,
-    marginBottom: 15,
-    borderRadius: 10,
+    height: 740, 
+    borderRadius: 15,
+    marginBottom: 10,
+  },
+
+  video: {
+    width: "100%",
+    height: 750, 
+    borderRadius: 15,
+    backgroundColor: "#000",
   },
 
   title: {
@@ -79,6 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     marginVertical: 10,
+    color: "#444",
   },
 
   sectionTitle: {
@@ -88,12 +124,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
-  video: {
-    marginVertical: 15,
-    borderRadius: 10,
-    backgroundColor: "#000",
-  },
-
   controls: {
     flexDirection: "row",
     justifyContent: "center",
@@ -101,7 +131,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#371eee",
     paddingVertical: 10,
     paddingHorizontal: 25,
     borderRadius: 8,
